@@ -1,5 +1,37 @@
 description = "Code Examples"
 
+ext.testFailures = 0
+ext.integTestFailures = 0
+project.gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.find { it.name == "unitTestReport" } != null) {
+        taskGraph.allTasks.each { Task task ->
+            if (task.getName().equals("test")) {
+                println("Found test task: " + task)
+                Test test = (Test) task
+                test.ignoreFailures = true // proceed even test fails
+                test.afterSuite { td, tr ->
+                    if (td.getParent() == null) {
+                        ext.testFailures += tr.getFailedTestCount()  // increment failed tests count
+                    }
+                }
+            }
+        }
+    }
+    if (taskGraph.allTasks.find { it.name == "integTestReport" } != null) {
+        taskGraph.allTasks.each { Task task ->
+            if (task.getName().equals("integTest")) {
+                println("Found integTest task: " + task)
+                Test test = (Test) task
+                test.ignoreFailures = true
+                test.afterSuite { td, tr ->
+                    if (td.getParent() == null) {
+                        ext.integTestFailures += tr.getFailedTestCount()
+                    }
+                }
+            }
+        }
+    }
+}
 
 allprojects {
     apply plugin: 'java'
@@ -32,11 +64,21 @@ task unitTestReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/allUnitTests")
     // Include the results from the `test` task in all subprojects
     reportOn allprojects*.test
+    doLast {
+        if (testFailures > 0) {
+            throw new GradleException("The build finished but ${testFailures} tests failed. Please check report! ")
+        }
+    }
 }
 task integTestReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/allIntegTests")
     // Include the results from the `test` task in all subprojects
     reportOn allprojects*.integTest
+    doLast {
+        if (integTestFailures > 0) {
+            throw new GradleException("The build finished but ${integTestFailures} tests failed. Please check report! ")
+        }
+    }
 }
 
 ext {
