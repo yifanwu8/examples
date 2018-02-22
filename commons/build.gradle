@@ -1,8 +1,7 @@
 
 dependencies {
+    compile libraries.slf4j_log4j
 
-    testCompile libraries.camel_test
-    testCompile libraries.camel_test_spring
     testCompile libraries.junit
     testCompile libraries.testcontainers
     testCompile libraries.docker_client

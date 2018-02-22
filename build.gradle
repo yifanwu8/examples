@@ -1,5 +1,6 @@
 description = "Code Examples"
 
+
 allprojects {
     apply plugin: 'java'
 
