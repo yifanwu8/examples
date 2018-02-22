@@ -9,9 +9,11 @@ See example <https://github.com/yifanwu8/examples/blob/master/commons/src/test/j
 
 ### How to run:
 To run integration tests:
+```bash
 ./gradlew :integTest
-<br>
+```
 To run integration test with summary report:
+```bash
 ./gradlew :integTestReport
-<br>
+```
 Report is at ./build/reports/allIntegTests/index.html
