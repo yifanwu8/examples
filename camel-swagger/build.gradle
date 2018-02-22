@@ -1,0 +1,20 @@
+apply plugin: 'application'
+
+description="Camel Swagger Example with embedded SwaggerUI to control camel routes."
+
+mainClassName = 'com.yifanwu.examples.camel.Main'
+
+run {
+    args += 'src/main/resources/camel-swagger-main-context.xml'
+}
+
+dependencies {
+    compile libraries.slf4j_log4j
+    compile libraries.webjars_swaggerui
+    compile libraries.camel_spring
+    compile libraries.camel_jetty
+    compile libraries.camel_jackson
+    compile libraries.camel_swagger_java
+
+    testCompile libraries.junit
+}

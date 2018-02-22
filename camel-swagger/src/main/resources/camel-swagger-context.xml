@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://camel.apache.org/schema/spring
+       http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.springframework.org/schema/lang 
+       http://www.springframework.org/schema/lang/spring-lang.xsd">
+
+
+    <camelContext id="rest" xmlns="http://camel.apache.org/schema/spring">
+
+        <template id="dummyTemplate" defaultEndpoint="direct:dummy"/>
+
+        <errorHandler id="noErrorHandler" type="NoErrorHandler"/>
+
+        <threadPoolProfile id="defaultThreadPoolProfile" defaultProfile="true" poolSize="10" maxPoolSize="20" maxQueueSize="1000"
+                           allowCoreThreadTimeOut="false" rejectedPolicy="CallerRuns" />
+
+        <!-- Convert exception to HTTP status cod -->
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled><constant>true</constant></handled>
+            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>500</constant>
+            </setHeader>
+            <setHeader headerName="Exchange.CONTENT_TYPE">
+                <constant>text/plain</constant>
+            </setHeader>
+            <transform>
+                <simple>Server Error</simple>
+            </transform>
+        </onException>
+
+        <restConfiguration component="jetty" host="{{simu.rest_hostname}}" port="{{simu.rest_listen_port}}"
+                           bindingMode="off" apiContextPath="api-docs" apiContextListing="true"
+                           enableCORS="true">
+            <!--uncomment below to host Swagger UI on the jetty-->
+            <endpointProperty key="handlers" value="swaggerUIHandler"/>
+
+            <dataFormatProperty key="json.in.disableFeatures" value="FAIL_ON_UNKNOWN_PROPERTIES,ADJUST_DATES_TO_CONTEXT_TIME_ZONE" />
+            <dataFormatProperty key="json.in.enableFeatures" value="FAIL_ON_NUMBERS_FOR_ENUMS,USE_BIG_DECIMAL_FOR_FLOATS" />
+            <!-- we want json output in pretty mode -->
+            <dataFormatProperty key="prettyPrint" value="true"/>
+            <!-- setup swagger api descriptions -->
+            <apiProperty key="api.version" value="1.0.0"/>
+            <apiProperty key="api.title" value="Camel Swagger REST Services"/>
+            <apiProperty key="api.description" value="Camel Swagger REST Services"/>
+            <apiProperty key="api.contact.name" value="No one"/>
+            <apiProperty key="host" value="localhost:{{simu.rest_listen_port}}"/>
+            <apiProperty key="schemes" value="http,https"/>
+        </restConfiguration>
+
+        <!--Below rest is for manage camel_swagger-->
+        <rest path="/manage" id="camel_swagger_control" apiDocs="true" >
+            <description>API to manage camel_swagger</description>
+            <get uri="/ping" produces="text/plain">
+                <responseMessage message="OK" code="200" />
+                <route id="managePing">
+                    <transform><constant>pong_from_camel_swagger_manager</constant></transform>
+                </route>
+            </get>
+            <get uri="/camel/route" produces="application/json" bindingMode="json">
+                <description>List of all camel routes with their status</description>
+                <responseMessage message="OK" code="200" />
+                <route id="getAllRoutes">
+                    <bean ref="camelRoutesManager" method="getRoutes"/>
+                </route>
+            </get>
+            <put uri="/camel/route/{id}" produces="text/plain">
+                <description>Operate an action on camel route by its ID</description>
+                <param name="id" type="path" description="Route ID" dataType="string" required="true"/>
+                <param name="action" type="query" description="Action to take start/stop/status/stats/suspend/resume"
+                       dataType="string" required="true"/>
+                <responseMessage message="result of the action" code="200" />
+                <route id="route_action">
+                    <toD uri="controlbus:route?routeId=${header.id}&amp;action=${header.action}"/>
+                    <when>
+                        <simple>${header.action} != 'stats'</simple>
+                        <toD uri="controlbus:route?routeId=${header.id}&amp;action=status"/>
+                    </when>
+                </route>
+            </put>
+        </rest>
+
+   </camelContext>
+
+</beans>

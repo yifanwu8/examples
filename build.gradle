@@ -1,0 +1,113 @@
+description = "Code Examples"
+
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
+    group = 'com.yifanwu.examples'
+    version = '1.0.0-SNAPSHOT'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    test {
+//        reports.html.enabled = false // Disable the test report for the individual test task
+//        testLogging { showStandardStreams = true }
+        include '**/Test*'
+        include '**/*Test.*'
+    }
+
+    task integTest(type: Test) {
+//        reports.html.enabled = true // Disable the test report for the individual test task
+//        testLogging { showStandardStreams = true }
+        ignoreFailures = true
+        include '**/IT*'
+        include '**/*IT.*'
+    }
+}
+
+task unitTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allUnitTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn allprojects*.test
+}
+task integTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/allIntegTests")
+    // Include the results from the `test` task in all subprojects
+    reportOn allprojects*.integTest
+}
+
+ext {
+    camelVersion = '2.17.6'
+}
+
+// all external dependencies go into here for central management (ie. version, exclusion)
+ext.libraries = [ // Groovy map literal
+        slf4j_log4j: "org.slf4j:slf4j-log4j12:1.7.25",
+        camel_core: dependencies.create("org.apache.camel:camel-core:${camelVersion}")
+                { exclude module: "slf4j-api"
+                    force = true },
+        camel_spring: "org.apache.camel:camel-spring:${camelVersion}",
+        camel_jms: "org.apache.camel:camel-jms:${camelVersion}",
+        camel_hawtdb: "org.apache.camel:camel-hawtdb:${camelVersion}",
+        camel_disruptor: "org.apache.camel:camel-disruptor:${camelVersion}",
+        camel_groovy: "org.apache.camel:camel-groovy:${camelVersion}",
+        camel_metrics: dependencies.create("org.apache.camel:camel-metrics:${camelVersion}")
+                { exclude module: "slf4j-api"
+                    force = true},
+        camel_http4: "org.apache.camel:camel-http4:${camelVersion}",
+        camel_exec: "org.apache.camel:camel-exec:${camelVersion}",
+        camel_kafka: dependencies.create("org.apache.camel:camel-kafka:${camelVersion}")
+                { exclude module: "kafka-clients"
+                    force = true},
+        kafka_clients: dependencies.create("org.apache.kafka:kafka-clients:0.11.0.1")
+                { exclude module: "slf4j-api"
+                    force = true},
+        camel_netty4_http: "org.apache.camel:camel-netty4-http:${camelVersion}",
+        camel_jetty: "org.apache.camel:camel-jetty:${camelVersion}",
+        camel_jackson: "org.apache.camel:camel-jackson:${camelVersion}",
+        camel_netty4: "org.apache.camel:camel-netty4:${camelVersion}",
+        camel_mail: "org.apache.camel:camel-mail:${camelVersion}",
+        camel_swagger_java: "org.apache.camel:camel-swagger-java:${camelVersion}",
+        camel_quartz: "org.apache.camel:camel-quartz:${camelVersion}",
+        activemq_all: "org.apache.activemq:activemq-all:5.11.1",
+        camel_sql: "org.apache.camel:camel-sql:${camelVersion}",
+        derby: "org.apache.derby:derby:10.12.1.1",
+        mysql_connector: "mysql:mysql-connector-java:5.1.6",
+        commons_dbcp: "commons-dbcp:commons-dbcp:1.4",
+        poi: "org.apache.poi:poi:3.12",
+        poi_ooxml: "org.apache.poi:poi-ooxml:3.12",
+        groovy_all: "org.codehaus.groovy:groovy-all:2.4.6",
+        json: "org.json:json:20160810",
+        google_gson: "com.google.code.gson:gson:2.6.2",
+        xbean_spring: "org.apache.xbean:xbean-spring:4.5",
+        camel_spring_security: "org.apache.camel:camel-spring-security:${camelVersion}",
+        spring_security_web: "org.springframework.security:spring-security-web:4.2.3.RELEASE",
+        httpclient: "org.apache.httpcomponents:httpclient:4.5.2",
+        guava: "com.google.guava:guava:23.0",
+        lettuce: "biz.paluch.redis:lettuce:4.2.2.Final",
+        jedis: "redis.clients:jedis:2.9.0",
+        spring_data_redis: dependencies.create("org.springframework.data:spring-data-redis:1.8.0.RELEASE")
+                { exclude module: "slf4j-api"
+                    force = true},
+        spring_core: "org.springframework:spring-core:4.3.6.RELEASE",
+        camel_stream: "org.apache.camel:camel-stream:${camelVersion}",
+        camel_xstream: "org.apache.camel:camel-xstream:2.17.0",
+        c3p0: "com.mchange:c3p0:0.9.5.2",
+        webjars_swaggerui: "org.webjars:swagger-ui:3.10.0",
+
+        // below are tests scope
+        junit: "junit:junit:4.12",
+        camel_test: "org.apache.camel:camel-test:${camelVersion}",
+        camel_test_spring: "org.apache.camel:camel-test-spring:${camelVersion}",
+        docker_client: "com.spotify:docker-client:8.9.1",
+        testcontainers: "org.testcontainers:testcontainers:1.4.2",
+        zkclient: dependencies.create("com.101tec:zkclient:0.10")
+                { exclude module: "log4j"
+                    exclude module: "slf4j-log4j12"
+                    force = true},
+        kafka: dependencies.create("org.apache.kafka:kafka_2.11:0.11.0.1")
+                { exclude module: "slf4j-log4j12"
+                    force = true},
+]

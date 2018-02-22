@@ -1,0 +1,22 @@
+# Compiled class file
+*.class
+
+*.log
+logs
+activemq-data
+
+# maven compiled
+target
+
+# IntelliJ stuff
+.idea
+*.iml
+**/out/production/
+**/out/test/
+**/classes/test/
+**/classes/production/
+
+.testcontainers-tmp-*
+/.gradle/
+build/
+META-INF/

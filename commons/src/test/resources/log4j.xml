@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+    xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+       <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" 
+            value="%t|%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+       </layout>
+    </appender>
+
+<!--     <appender name="console" class="org.apache.log4j.ConsoleAppender"> -->
+<!--         <layout class="org.apache.log4j.PatternLayout"> -->
+<!--             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" /> -->
+<!--         </layout> -->
+<!--     </appender> -->
+
+        <!-- value can be any of these: ALL, DEBUG, ERROR, FATAL, INFO, OFF, TRACE, WARN -->
+        <!-- ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF -->
+        <!-- Turning on verbose logging levels can have negative impact on performance. -->
+
+        <root>
+            <level value="INFO"/>
+            <appender-ref ref="console"/>
+        </root>
+
+<!--       <logger name="com.sas.finance.fraud.ol.monitor.LogMessageHistory"> -->
+<!--           <level value="INFO"/> -->
+<!--           <appender-ref ref="file"/> -->
+<!--       </logger> -->
+
+         <logger name="com.sas.finance.fraud.ol.monitor">
+             <level value="DEBUG"/>
+             <appender-ref ref="file"/>
+         </logger>
+
+<!--     <logger name="com.sas.finance.fraud.ol.xmltransform"> -->
+<!--         <level value="ERROR"/> -->
+<!--         <appender-ref ref="file"/> -->
+<!--     </logger> -->
+
+<!--     <logger name="com.sas.finance.fraud.ol.utils"> -->
+<!--         <level value="INFO"/> -->
+<!--         <appender-ref ref="file"/> -->
+<!--     </logger> -->
+    
+<!--     <logger name="com.sas.finance.fraud.ol.saf"> -->
+<!--          <level value="DEBUG" />  -->
+<!--         <appender-ref ref="file" /> -->
+<!--     </logger> -->
+
+<!--     <logger name="com.sas.finance.fraud.ol.beans.CustomExchangeTracker"> -->
+<!--          <level value="INFO" />  -->
+<!--         <appender-ref ref="file" /> -->
+<!--     </logger> -->
+
+         <!--<logger name="com.sas.finance.fraud.ol.saf">-->
+              <!--<level value="DEBUG" />-->
+             <!--<appender-ref ref="console" />-->
+         <!--</logger>-->
+
+        <!--<logger name="com.sas.finance.fraud.ol.saf">-->
+            <!--<level value="DEBUG" />-->
+            <!--<appender-ref ref="console" />-->
+        <!--</logger>-->
+
+</log4j:configuration>
