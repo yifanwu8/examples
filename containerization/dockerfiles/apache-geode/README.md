@@ -3,7 +3,7 @@
 Dockerfiles that build ready-to-go Apache geode service. No need to use gfsh command.
 
 
-#### single server configuration
+#### [single server configuration](https://github.com/yifanwu8/examples/tree/master/containerization/dockerfiles/apache-geode/single_server)
 This configuration start one locator and one server.
 It is also capable of creating up to 4 regions at the container start up time by passing environment variables.
 The region is only replicated because there is only one server.
