@@ -1,6 +1,6 @@
 FROM apachegeode/geode:latest
 
-LABEL maintainer="yifan.wu@live.com"
+LABEL maintainer="yifan.wu"
 
 RUN mkdir /sh
 
