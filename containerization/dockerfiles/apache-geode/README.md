@@ -13,3 +13,60 @@ If the clients is not on localhost, a ADDRESS environment variable is also neede
 ```
 docker run -p 10334:10334 -p 40404:40404 -e REGION1=region1 -e REGION1_EXPIRE=100 -e REGION2=num2 -e REGION2_EXPIRE=300 -e REGION3=reg3 -e REGION3_EXPIRE=300 -e ADDRESS=aaa.bbb.ccc.ddd yifanwu/apachegeode:replicated4
 ```
+
+##### Security
+If you want to turn on security, please set `SECURITY` environment variable to `true` and provide `USERNAME`and `PASSWORD`. Please see below example.
+The security manager is Geode embedded `ExampleSecurityManager` which will take a security.json file. The internal security.json file is shown in the [Appendix](#Appendix).
+If you want to use your own security.json file, please do a volume map to `/classpath`.
+```bash
+docker run -p 10334:10334 -p 40404:40404 -e SECURITY=true -e USERNAME=super-user -e PASSWORD=1234567 -e REGION1=region1 -e REGION1_EXPIRE=100 yifanwu/apachegeode:replicated4
+```
+
+### Appendix
+##### security.json
+```json
+{
+  "roles": [
+    {
+      "name": "cluster",
+      "operationsAllowed": [
+        "CLUSTER:MANAGE",
+        "CLUSTER:WRITE",
+        "CLUSTER:READ"
+      ]
+    },
+    {
+      "name": "data",
+      "operationsAllowed": [
+        "DATA:MANAGE",
+        "DATA:WRITE",
+        "DATA:READ"
+      ]
+    },
+    {
+      "name": "region1&2Reader",
+      "operationsAllowed": [
+        "DATA:READ"
+      ],
+      "regions": ["region1", "region2"]
+    }
+  ],
+  "users": [
+    {
+      "name": "super-user",
+      "password": "1234567",
+      "roles": [
+        "cluster",
+        "data"
+      ]
+    },
+    {
+      "name": "joebloggs",
+      "password": "1234567",
+      "roles": [
+        "data"
+      ]
+    }
+  ]
+}
+```
