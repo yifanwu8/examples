@@ -1,0 +1,24 @@
+
+version: '2.1'
+services:
+  graphite:
+    image: graphiteapp/docker-graphite-statsd
+    hostname: graphite
+    ports:
+      - '2003:2003'
+      - '8125:8125'
+#      - '38081:80'
+    volumes:
+      - ./data/graphite/storage:/opt/graphite/storage
+
+  grafana:
+    image: grafana/grafana:5.2.2
+    hostname: grafana
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./conf/grafana/provisioning:/etc/grafana/provisioning
+      - ./conf/grafana/dashboards:/tmp/grafana/dashboards
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - graphite
