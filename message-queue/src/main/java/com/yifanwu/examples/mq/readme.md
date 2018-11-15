@@ -32,3 +32,9 @@ SiMessageConsumer msgConsumer = new RedisSingleMsgConsumer<>(redisTemplate, dest
 msgConsumer.init();
 msgConsumer.receiveNoWait();
 ```
+
+### Tests
+Unit integration tests are in class: RedisMsgQueueIT.
+The tests require docker to be installed and
+Redis will be in docker container.
+See [link](https://github.com/yifanwu8/examples/tree/master/commons) for details
