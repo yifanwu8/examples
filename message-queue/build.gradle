@@ -1,0 +1,12 @@
+
+
+dependencies {
+    compile libraries.jsr305
+    compile libraries.slf4j_log4j
+    compile libraries.jcip
+    compile libraries.spring_core
+    compile libraries.spring_data_redis
+    compile libraries.jedis
+
+    testCompile libraries.junit
+}

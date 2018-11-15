@@ -7,6 +7,6 @@
 
 include "commons"
 include 'camel-swagger'
-
+include 'message-queue'
 
 rootProject.name = 'examples'

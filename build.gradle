@@ -82,11 +82,13 @@ task integTestReport(type: TestReport) {
 }
 
 ext {
-    camelVersion = '2.17.6'
+    camelVersion = '2.22.0'
 }
 
 // all external dependencies go into here for central management (ie. version, exclusion)
 ext.libraries = [ // Groovy map literal
+        jcip: "net.jcip:jcip-annotations:1.0",
+        jsr305: 'com.google.code.findbugs:jsr305:3.0.2',
         slf4j_log4j: "org.slf4j:slf4j-log4j12:1.7.25",
         camel_core: dependencies.create("org.apache.camel:camel-core:${camelVersion}")
                 { exclude module: "slf4j-api"
@@ -131,10 +133,10 @@ ext.libraries = [ // Groovy map literal
         guava: "com.google.guava:guava:23.0",
         lettuce: "biz.paluch.redis:lettuce:4.2.2.Final",
         jedis: "redis.clients:jedis:2.9.0",
-        spring_data_redis: dependencies.create("org.springframework.data:spring-data-redis:1.8.0.RELEASE")
+        spring_data_redis: dependencies.create("org.springframework.data:spring-data-redis:2.0.5.RELEASE")
                 { exclude module: "slf4j-api"
                     force = true},
-        spring_core: "org.springframework:spring-core:4.3.6.RELEASE",
+        spring_core: "org.springframework:spring-core:5.0.7.RELEASE",
         camel_stream: "org.apache.camel:camel-stream:${camelVersion}",
         camel_xstream: "org.apache.camel:camel-xstream:2.17.0",
         c3p0: "com.mchange:c3p0:0.9.5.2",
