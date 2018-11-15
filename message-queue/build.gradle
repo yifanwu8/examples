@@ -9,4 +9,8 @@ dependencies {
     compile libraries.jedis
 
     testCompile libraries.junit
+    testCompile libraries.testcontainers
+    testCompile libraries.docker_client
+    testCompile project(':commons').sourceSets.test.output
+
 }
