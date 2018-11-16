@@ -16,6 +16,6 @@ The default configuration uses:
 Please see [IBM MQ IMAGE DOC](https://github.com/ibm-messaging/mq-container/tree/master/docs) for more information.
 
 ### Web console
-https://hostname:9443/ibmmq/console/
+https://hostname:9443/ibmmq/console/  
 Credentials: admin/passw0rd
 
